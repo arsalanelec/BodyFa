@@ -5,4 +5,19 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
+
+    <string name="title_activity_login">ثبت نام</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="login_to_bodifa">ورود به بادیفا</string>
+    <string name="email_hint">ایمیل...</string>
+    <string name="password">رمز عبور</string>
+    <string name="not_registered_yet">هنوز در بادیفا ثبت نام نکرده اید؟</string>
+    <string name="register">ثبت نام</string>
+    <string name="user_account">حساب کاربری</string>
+    <string name="register_in_bodyfa">عضویت در بادیفا</string>
+    <string name="agree_licence">شرایط را خوانده و قوانین را قبول دارم</string>
 </resources>

@@ -1,17 +1,33 @@
 package com.example.arsalan.mygym;
 
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.view.View;
+import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
+
+import com.example.arsalan.mygym.fragments.GymListFragment;
+import com.example.arsalan.mygym.fragments.HomeFragment;
+import com.example.arsalan.mygym.fragments.NewsFragment;
+import com.example.arsalan.mygym.fragments.TrainerListFragment;
+import com.example.arsalan.mygym.fragments.TutorialFragment;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -23,14 +39,6 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -40,6 +48,44 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        ViewPager viewPager = findViewById(R.id.viewpager);
+        myViewPagerAdapter viewPagerAdapter = new myViewPagerAdapter(getSupportFragmentManager());
+        viewPager.setAdapter(viewPagerAdapter);
+        TabLayout tabs = findViewById(R.id.tablayout);
+        tabs.setupWithViewPager(viewPager);
+        for (int i = 0; i < tabs.getTabCount(); i++) {
+            TabLayout.Tab tab = tabs.getTabAt(i);
+            tab.setCustomView(viewPagerAdapter.getTabView(i));
+            TextView tv = (TextView) tab.getCustomView().findViewById(R.id.textView);
+            tv.setTextColor(ContextCompat.getColor(this, tab.isSelected() ? R.color.colorPrimary : R.color.colorAccent));
+            if (tab.isSelected())
+                tab.getCustomView().setBackgroundResource(R.drawable.white_rect_back);
+
+        }
+        tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                if (tab.getCustomView() != null) {
+                    tab.getCustomView().setBackgroundResource(R.drawable.white_rect_back);
+                    TextView tv = (TextView) tab.getCustomView().findViewById(R.id.textView);
+                    tv.setTextColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary));
+                }
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+                if (tab.getCustomView() != null) {
+                    tab.getCustomView().setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary));
+                    TextView tv = (TextView) tab.getCustomView().findViewById(R.id.textView);
+                    tv.setTextColor(Color.WHITE);
+                }
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
     }
 
     @Override
@@ -97,5 +143,44 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private class myViewPagerAdapter extends FragmentStatePagerAdapter {
+        String[] titles = {"خانه", "اخبار ورزشی و تغذیه", "آموزش حرکات",  "قهرمان ها","باشگاه ها"};
+
+        public myViewPagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        public View getTabView(int position) {
+            // Given you have a custom layout in `res/layout/custom_tab.xml` with a TextView and ImageView
+            View v = LayoutInflater.from(getApplicationContext()).inflate(R.layout.custom_tab, null);
+            TextView tv = (TextView) v.findViewById(R.id.textView);
+            tv.setText(titles[position]);
+            Typeface typeface = ResourcesCompat.getFont(MainActivity.this, R.font.iran_sans_mobile);
+            tv.setTypeface(typeface);
+            return v;
+        }
+
+        @Nullable
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return titles[position];
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            if (position == 1) return new NewsFragment();
+            if (position == 4) return new GymListFragment();
+            if (position == 3) return new TrainerListFragment();
+            if (position == 2) return new TutorialFragment();
+
+            return new HomeFragment();
+        }
+
+        @Override
+        public int getCount() {
+            return titles.length;
+        }
     }
 }

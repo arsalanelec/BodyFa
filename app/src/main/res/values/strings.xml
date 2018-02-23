@@ -20,4 +20,14 @@
     <string name="user_account">حساب کاربری</string>
     <string name="register_in_bodyfa">عضویت در بادیفا</string>
     <string name="agree_licence">شرایط را خوانده و قوانین را قبول دارم</string>
+    <string name="foodNews">اخبار تغذیه</string>
+    <string name="fitnessNews">اخبار ورزشی</string>
+    <string name="demoText">خون را پایین آورده و کلسترول خوب خون را بالا میبرد . گردو باعث محافظت از پوست ، استحکام استخوان ، تنظیم متابولیسم بدن ، تقویت هوش و حافظه ، درمان کننده درد مفاصل ، تقویت کننده سیستم ایمنی بدن</string>
+    <string name="most_point">بیشترین امتیاز</string>
+    <string name="most_awards">بیشترین مقام</string>
+    <string name="by_city">بر اساس شهر</string>
+    <string name="title_activity_athlete_main">AthleteMainActivity</string>
+    <string name="show">نمایش</string>
+    <string name="general">عمومی</string>
+    <string name="vip">اختصاصی</string>
 </resources>

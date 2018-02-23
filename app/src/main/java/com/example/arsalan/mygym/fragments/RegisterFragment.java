@@ -1,4 +1,4 @@
-package com.example.arsalan.mygym;
+package com.example.arsalan.mygym.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -8,8 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.arsalan.mygym.R;
 
-public class LoginFragment extends Fragment {
+
+public class RegisterFragment extends Fragment {
 /*
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -23,7 +25,7 @@ public class LoginFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    public LoginFragment() {
+    public RegisterFragment() {
         // Required empty public constructor
     }
 /*
@@ -53,12 +55,12 @@ public class LoginFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v= inflater.inflate(R.layout.fragment_login, container, false);
-        TextView registerTV=v.findViewById(R.id.txtRegister);
-        registerTV.setOnClickListener(new View.OnClickListener() {
+        View v = inflater.inflate(R.layout.fragment_register, container, false);
+        TextView loginTV = v.findViewById(R.id.txtLogin);
+        loginTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mListener.gotoRegisterationPage();
+                mListener.gotoLoginPage();
             }
         });
         return v;
@@ -83,8 +85,9 @@ public class LoginFragment extends Fragment {
     }
 
     public interface OnFragmentInteractionListener {
-        void login();
-        void gotoRegisterationPage();
+        void register();
+
+        void gotoLoginPage();
 
     }
 }

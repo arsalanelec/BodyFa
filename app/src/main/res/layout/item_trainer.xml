@@ -36,7 +36,7 @@
         app:layout_constraintTop_toBottomOf="@+id/imgThumb" />
 
     <TextView
-        android:id="@+id/txtTitle"
+        android:id="@+id/txtAddress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
@@ -60,9 +60,10 @@
         android:layout_marginTop="4dp"
         android:numStars="5"
         android:rating="3"
+        android:theme="@style/RatingBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtTitle" />
+        app:layout_constraintTop_toBottomOf="@+id/txtAddress" />
 
     <TextView
         android:id="@+id/txtPoints"

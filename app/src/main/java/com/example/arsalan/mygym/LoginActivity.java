@@ -4,6 +4,9 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
+import com.example.arsalan.mygym.fragments.LoginFragment;
+import com.example.arsalan.mygym.fragments.RegisterFragment;
+
 public class LoginActivity extends AppCompatActivity implements
         LoginFragment.OnFragmentInteractionListener
         , RegisterFragment.OnFragmentInteractionListener {

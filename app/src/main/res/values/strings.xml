@@ -30,4 +30,9 @@
     <string name="show">نمایش</string>
     <string name="general">عمومی</string>
     <string name="vip">اختصاصی</string>
+    <string name="main_page">صفحه اصلی</string>
+    <string name="FAQ">سوالات متداول</string>
+    <string name="EULA">سیاست حفظ حریم خصوصی</string>
+    <string name="contact_us">تماس با ما</string>
+    <string name="title_activity_profile_trained">مربی</string>
 </resources>

@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layoutDirection="rtl"
+    android:orientation="vertical"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.example.arsalan.mygym.ProfileGymActivity"
+    tools:showIn="@layout/activity_profile_gym">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/txtName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:fontFamily="@font/iran_sans_mobile"
+            android:text="باشگاه ستارگان"
+            android:textColor="@android:color/black"
+            android:textSize="14sp" />
+
+        <RatingBar
+            style="@style/Base.Widget.AppCompat.RatingBar.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:numStars="5"
+            android:rating="5"
+            android:theme="@style/RatingBar" />
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/gym" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="8dp"
+        android:fontFamily="@font/iran_sans_mobile"
+        android:text="امکانات باشگاه" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:layout_weight="1"
+            android:background="@drawable/gray_rect_back_nomargin"
+            android:drawableStart="@drawable/ic_dollar_24dp"
+            android:fontFamily="@font/iran_sans_mobile"
+            android:gravity="right"
+            android:text="شهریه ثابت:120 هزار تومان"
+            android:textColor="@android:color/black"
+            android:textSize="10sp" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:layout_weight="1"
+            android:background="@drawable/gray_rect_back_nomargin"
+            android:drawableStart="@drawable/ic_dollar_24dp"
+            android:fontFamily="@font/iran_sans_mobile"
+            android:gravity="right"
+            android:text="دسترسی به متر: تجریش"
+            android:textColor="@android:color/black"
+            android:textSize="10sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:layout_weight="1"
+            android:background="@drawable/gray_rect_back_nomargin"
+            android:drawableStart="@drawable/ic_dollar_24dp"
+            android:fontFamily="@font/iran_sans_mobile"
+            android:gravity="right"
+            android:text="وای فای: دارد"
+            android:textColor="@android:color/black"
+            android:textSize="10sp" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:layout_weight="1"
+            android:background="@drawable/gray_rect_back_nomargin"
+            android:drawableStart="@drawable/ic_dollar_24dp"
+            android:ellipsize="end"
+            android:fontFamily="@font/iran_sans_mobile"
+            android:gravity="right"
+            android:lines="1"
+            android:text="تعداد حمام: 3 عدد"
+            android:textColor="@android:color/black"
+            android:textSize="10sp" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:layout_weight="1"
+            android:background="@drawable/gray_rect_back_nomargin"
+            android:drawableStart="@drawable/ic_dollar_24dp"
+            android:fontFamily="@font/iran_sans_mobile"
+            android:gravity="right"
+            android:lines="1"
+            android:text="تعداد سرویس: 3 عدد"
+            android:textColor="@android:color/black"
+            android:textSize="10sp" />
+    </LinearLayout>
+
+
+    <android.support.v7.widget.AppCompatButton
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:fontFamily="@font/iran_sans_mobile"
+        android:text="ثبت نام آنلاین"
+        android:textColor="@color/colorAccent"
+        app:backgroundTint="@color/green" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/gray_rect_back"
+        android:drawableTop="@drawable/ic_placeholder"
+        android:fontFamily="@font/iran_sans_mobile"
+        android:gravity="center"
+        android:text="سعادت آباد - میدان کاج - خیابان شعبانی - پلاک 6"
+        android:textColor="@android:color/black"
+        android:textSize="10sp" />
+
+    <com.google.android.gms.maps.MapView
+        android:id="@+id/mapView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:minHeight="180dp" />
+
+
+</LinearLayout>

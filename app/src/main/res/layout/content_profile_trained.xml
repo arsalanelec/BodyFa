@@ -9,11 +9,13 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.example.arsalan.mygym.ProfileTrainedActivity"
     tools:showIn="@layout/activity_profile_trained">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:padding="16dp">
+
         <TextView
             android:id="@+id/txtName"
             android:layout_width="0dp"
@@ -22,7 +24,7 @@
             android:layout_weight="1"
             android:fontFamily="@font/iran_sans_mobile"
             android:text="ارسلان صالحی"
-            android:textSize="18sp"/>
+            android:textSize="14sp" />
 
         <RatingBar
             style="@style/Base.Widget.AppCompat.RatingBar.Small"
@@ -33,16 +35,146 @@
             android:rating="5"
             android:theme="@style/RatingBar" />
     </LinearLayout>
-<ImageView
-    android:layout_width="match_parent"
-    android:layout_height="200dp"
-    android:scaleType="centerCrop"
-    android:src="@drawable/ronnie_coleman_triceps_extensions"/>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ronnie_coleman_triceps_extensions" />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:fontFamily="@font/iran_sans_mobile"
-        android:text="مقام ها"/>
+        android:text="مقام ها" />
 
+    <android.support.v7.widget.GridLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        app:columnCount="3"
+        app:rowCount="1"
+        app:useDefaultMargins="true">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/gray_rect_back"
+            android:orientation="vertical"
+            app:layout_columnWeight="1">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:drawableTop="@drawable/ic_medal"
+                android:fontFamily="@font/iran_sans_mobile"
+                android:gravity="center"
+                android:text="اول کشوری"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fontFamily="@font/iran_sans_mobile"
+                android:gravity="center"
+                android:text="سال 94"
+                android:textSize="10sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/gray_rect_back"
+            android:orientation="vertical"
+            app:layout_columnWeight="1">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:drawableTop="@drawable/ic_medal"
+                android:fontFamily="@font/iran_sans_mobile"
+                android:gravity="center"
+                android:text="اول کشوری"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fontFamily="@font/iran_sans_mobile"
+                android:gravity="center"
+                android:text="سال 94"
+                android:textSize="10sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/gray_rect_back"
+            android:orientation="vertical"
+            app:layout_columnWeight="1">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:drawableTop="@drawable/ic_medal"
+                android:fontFamily="@font/iran_sans_mobile"
+                android:gravity="center"
+                android:text="اول کشوری"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fontFamily="@font/iran_sans_mobile"
+                android:gravity="center"
+                android:text="سال 94"
+                android:textSize="10sp" />
+        </LinearLayout>
+    </android.support.v7.widget.GridLayout>
+
+    <android.support.v7.widget.AppCompatButton
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:fontFamily="@font/iran_sans_mobile"
+        android:text="سفارش برنامه غذایی"
+        android:textColor="@color/colorAccent"
+        app:backgroundTint="@color/red" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:fontFamily="@font/iran_sans_mobile"
+        android:gravity="center"
+        android:lines="1"
+        android:text="هزینه هر برنامه غذایی بصورت پایه 120 هزار تومان از طرف مربی تعیین شده است."
+        android:textColor="@android:color/black"
+        android:textSize="10sp" />
+    <android.support.v7.widget.AppCompatButton
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:fontFamily="@font/iran_sans_mobile"
+        android:text="سفارش برنامه غذایی"
+        android:textColor="@color/colorAccent"
+        app:backgroundTint="@color/colorPrimary" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:fontFamily="@font/iran_sans_mobile"
+        android:gravity="center"
+        android:lines="1"
+        android:text="هزینه هر برنامه تمرینی بصورت پایه 80 هزار تومان از طرف مربی تعیین شده است."
+        android:textColor="@android:color/black"
+        android:textSize="10sp" />
 </LinearLayout>

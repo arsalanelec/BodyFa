@@ -1,6 +1,7 @@
 package com.example.arsalan.mygym.adapters;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.Adapter;
 import android.view.LayoutInflater;
@@ -8,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.arsalan.mygym.Objects.Trainer;
+import com.example.arsalan.mygym.ProfileTrainedActivity;
 import com.example.arsalan.mygym.R;
 
 import java.util.List;
@@ -27,6 +29,14 @@ Activity mActivity;
     @Override
     public VH onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView=LayoutInflater.from(mActivity).inflate(R.layout.item_trainer,parent,false);
+        itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i=new Intent();
+                i.setClass(mActivity, ProfileTrainedActivity.class);
+                mActivity.startActivity(i);
+            }
+        });
         return new VH(itemView);
     }
 

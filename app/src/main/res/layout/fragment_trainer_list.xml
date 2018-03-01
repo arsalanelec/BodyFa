@@ -25,6 +25,7 @@
             android:layout_width="wrap_content"
             android:layout_height="32dp"
             android:background="@drawable/button_rect"
+            android:checked="true"
             android:fontFamily="@font/iran_sans_mobile"
             android:paddingEnd="32dp"
             android:paddingStart="32dp"

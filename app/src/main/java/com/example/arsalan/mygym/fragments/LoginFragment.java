@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.arsalan.mygym.MainActivity;
@@ -58,20 +59,31 @@ public class LoginFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v= inflater.inflate(R.layout.fragment_login, container, false);
-        TextView registerTV=v.findViewById(R.id.txtRegister);
+        View v = inflater.inflate(R.layout.fragment_login, container, false);
+        TextView registerTV = v.findViewById(R.id.txtRegister);
         registerTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mListener.gotoRegisterationPage();
             }
         });
-        Button loginBtn=v.findViewById(R.id.btnLogin);
+        final EditText username = v.findViewById(R.id.txtUsername);
+        Button loginBtn = v.findViewById(R.id.btnLogin);
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i=new Intent();
-                i.setClass(getActivity(),MainActivity.class);
+                if (username.getText().length() == 0) {
+                    username.setError("نام کاربری خالی است");
+                    return;
+                }
+                Intent i = new Intent();
+
+                i.setClass(getActivity(), MainActivity.class);
+                if (username.getText().toString().equals("o")) {
+                    i.putExtra("KEY", MainActivity.KEY_OMOMI);
+                } else if (username.getText().toString().equals("v")) {
+                    i.putExtra("KEY", MainActivity.KEY_VARZESHKAR);
+                }
                 startActivity(i);
             }
         });
@@ -98,6 +110,7 @@ public class LoginFragment extends Fragment {
 
     public interface OnFragmentInteractionListener {
         void login();
+
         void gotoRegisterationPage();
 
     }

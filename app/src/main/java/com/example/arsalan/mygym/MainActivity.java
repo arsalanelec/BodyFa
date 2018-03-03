@@ -25,12 +25,18 @@ import android.widget.TextView;
 
 import com.example.arsalan.mygym.fragments.GymListFragment;
 import com.example.arsalan.mygym.fragments.HomeFragment;
+import com.example.arsalan.mygym.fragments.MyGymFragment;
+import com.example.arsalan.mygym.fragments.MyTrainerFragment;
 import com.example.arsalan.mygym.fragments.NewsFragment;
 import com.example.arsalan.mygym.fragments.TrainerListFragment;
 import com.example.arsalan.mygym.fragments.TutorialFragment;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    final public static String KEY_OMOMI = "KEY_OMOMI";
+    final public static String KEY_VARZESHKAR = "KEY_VARZESHKAR";
+    private FragmentStatePagerAdapter viewPagerOmomiAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,19 +55,28 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         ViewPager viewPager = findViewById(R.id.viewpager);
-        myViewPagerAdapter viewPagerAdapter = new myViewPagerAdapter(getSupportFragmentManager());
-        viewPager.setAdapter(viewPagerAdapter);
+        if (getIntent().getStringExtra("KEY").equals(KEY_OMOMI))
+            viewPagerOmomiAdapter = new ViewPagerOmoomiAdapter(getSupportFragmentManager());
+        else if (getIntent().getStringExtra("KEY").equals(KEY_VARZESHKAR))
+            viewPagerOmomiAdapter = new ViewPagerVarzeshkarAdapter(getSupportFragmentManager());
+        viewPager.setAdapter(viewPagerOmomiAdapter);
         TabLayout tabs = findViewById(R.id.tablayout);
         tabs.setupWithViewPager(viewPager);
+
         for (int i = 0; i < tabs.getTabCount(); i++) {
             TabLayout.Tab tab = tabs.getTabAt(i);
-            tab.setCustomView(viewPagerAdapter.getTabView(i));
+
+            if (getIntent().getStringExtra("KEY").equals(KEY_OMOMI))
+                tab.setCustomView(((ViewPagerOmoomiAdapter) viewPagerOmomiAdapter).getTabView(i));
+            else if (getIntent().getStringExtra("KEY").equals(KEY_VARZESHKAR))
+                tab.setCustomView(((ViewPagerVarzeshkarAdapter) viewPagerOmomiAdapter).getTabView(i));
+
             TextView tv = (TextView) tab.getCustomView().findViewById(R.id.textView);
             tv.setTextColor(ContextCompat.getColor(this, tab.isSelected() ? R.color.colorPrimary : R.color.colorAccent));
             if (tab.isSelected())
                 tab.getCustomView().setBackgroundResource(R.drawable.white_rect_back);
-
         }
+
         tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -141,10 +156,10 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    private class myViewPagerAdapter extends FragmentStatePagerAdapter {
-        String[] titles = {"خانه", "اخبار ورزشی و تغذیه", "آموزش حرکات",  "قهرمان ها","باشگاه ها"};
+    private class ViewPagerOmoomiAdapter extends FragmentStatePagerAdapter {
+        String[] titles = {"خانه", "اخبار ورزشی و تغذیه", "آموزش حرکات", "قهرمان ها", "باشگاه ها"};
 
-        public myViewPagerAdapter(FragmentManager fm) {
+        public ViewPagerOmoomiAdapter(FragmentManager fm) {
             super(fm);
         }
 
@@ -179,4 +194,44 @@ public class MainActivity extends AppCompatActivity
             return titles.length;
         }
     }
+
+    private class ViewPagerVarzeshkarAdapter extends FragmentStatePagerAdapter {
+        String[] titles = {"باشگاه من", "مربی من", "برنامه غذایی", "برنامه تمرینی"};
+
+        public ViewPagerVarzeshkarAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        public View getTabView(int position) {
+            // Given you have a custom layout in `res/layout/custom_tab.xml` with a TextView and ImageView
+            View v = LayoutInflater.from(getApplicationContext()).inflate(R.layout.custom_tab, null);
+            TextView tv = (TextView) v.findViewById(R.id.textView);
+            tv.setText(titles[position]);
+            Typeface typeface = ResourcesCompat.getFont(MainActivity.this, R.font.iran_sans_mobile);
+            tv.setTypeface(typeface);
+            return v;
+        }
+
+        @Nullable
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return titles[position];
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            if (position == 0) return new MyGymFragment();
+            if (position == 1) return new MyTrainerFragment();
+            if (position == 3) return new TrainerListFragment();
+            if (position == 2) return new TutorialFragment();
+
+            return new HomeFragment();
+        }
+
+        @Override
+        public int getCount() {
+            return titles.length;
+        }
+    }
+
 }

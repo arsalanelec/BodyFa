@@ -7,7 +7,7 @@ package com.example.arsalan.mygym.Objects;
 
 public class City {
 
-    int _id;
+    int id;
 
     String name;
 
@@ -21,8 +21,8 @@ public class City {
         return name;
     }
 
-    public int get_id() {
-        return _id;
+    public int getId() {
+        return id;
     }
 
     public String getName() {

@@ -6,9 +6,12 @@ import android.support.v7.widget.RecyclerView.Adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.arsalan.mygym.Objects.News;
 import com.example.arsalan.mygym.R;
+import com.example.arsalan.mygym.retrofit.ApiClient;
+import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.util.List;
 
@@ -31,7 +34,15 @@ Activity mActivity;
     }
 
     @Override
-    public void onBindViewHolder(VH holder, int position) {
+    public void onBindViewHolder(VH h, int position) {
+        News news=newsList.get(position);
+        h.titleTV.setText(news.getTitle());
+        h.viewCntTV.setText(String.valueOf(news.getVisitcnt()));
+        h.likeCntTV.setText(String.valueOf(news.getLikeCnt()));
+        h.commentCntTV.setText(String.valueOf(news.getCommentCnt()));
+        h.dateTV.setText(news.getDate());
+        h.thumb.setImageURI(ApiClient.BASE_URL+news.getThumbUrl());
+
 
     }
 
@@ -41,8 +52,20 @@ Activity mActivity;
     }
 
     class VH extends RecyclerView.ViewHolder {
+        TextView titleTV;
+        TextView viewCntTV;
+        TextView likeCntTV;
+        TextView commentCntTV;
+        TextView dateTV;
+        SimpleDraweeView thumb;
         public VH(View itemView) {
             super(itemView);
+           titleTV= itemView.findViewById(R.id.txtTitle);
+           viewCntTV=itemView.findViewById(R.id.txtViewCnt);
+           likeCntTV=itemView.findViewById(R.id.txtLikeCnt);
+           commentCntTV=itemView.findViewById(R.id.txtCommentCnt);
+           dateTV=itemView.findViewById(R.id.txtDate);
+           thumb=itemView.findViewById(R.id.imgThumb);
         }
     }
 }

@@ -1,17 +1,31 @@
 package com.example.arsalan.mygym.Objects;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by Arsalan on 10-02-2018.
  */
 
 public class News {
     String title;
+    @SerializedName("Description")
     String desc;
+    @SerializedName("NewsDateFa")
     String date;
-    int visitcnt;
-    int likeCnt;
-    int commentCnt;
 
+    @SerializedName("ViewCount")
+    int visitcnt;
+
+    @SerializedName("LikeCount")
+    int likeCnt;
+
+    @SerializedName("CommentCount")
+    int commentCnt;
+    String thumbUrl;
+
+    public String getThumbUrl() {
+        return thumbUrl;
+    }
     public News() {
     }
 

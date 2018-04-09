@@ -13,7 +13,7 @@ public class Province {
 
     String name;
 
-    List<City> cityList;
+    List<City> cities;
 
     public Province() {
     }
@@ -26,8 +26,8 @@ public class Province {
         return name;
     }
 
-    public List<City> getCityList() {
-        return cityList;
+    public List<City> getCities() {
+        return cities;
     }
 
     @Override

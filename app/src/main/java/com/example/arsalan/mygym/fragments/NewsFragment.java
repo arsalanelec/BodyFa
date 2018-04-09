@@ -1,21 +1,32 @@
 package com.example.arsalan.mygym.fragments;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
+import android.widget.ToggleButton;
 
 import com.example.arsalan.mygym.Objects.News;
+import com.example.arsalan.mygym.Objects.RetNewsList;
 import com.example.arsalan.mygym.R;
 import com.example.arsalan.mygym.adapters.AdapterNews;
+import com.example.arsalan.mygym.retrofit.ApiClient;
+import com.example.arsalan.mygym.retrofit.ApiInterface;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 /**
@@ -37,6 +48,8 @@ public class NewsFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+    private List<News> newsList;
+    private AdapterNews adapter;
 
     public NewsFragment() {
         // Required empty public constructor
@@ -75,18 +88,66 @@ public class NewsFragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_news, container, false);
         RecyclerView newsRV = v.findViewById(R.id.rvNews);
-        List<News> newsList = new ArrayList<>();
-        for (int i=0;i<20;i++)
-        newsList.add(new News());
+        newsList = new ArrayList<>();
+        /*for (int i = 0; i < 20; i++)
+            newsList.add(new News());*/
 
-        AdapterNews adapter = new AdapterNews(getActivity(), newsList);
+         adapter = new AdapterNews(getActivity(), newsList);
         newsRV.setAdapter(adapter);
         newsRV.setLayoutManager(new LinearLayoutManager(getActivity()));
         v.setRotation(180);
+
+        final ToggleButton foodNewsTgl = v.findViewById(R.id.btnFoodNews);
+
+        final ToggleButton fitnessNewsTgl = v.findViewById(R.id.btnFitnessNews);
+        fitnessNewsTgl.setChecked(true);
+        getNewsWeb(1);
+        foodNewsTgl.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b) {
+                    fitnessNewsTgl.setChecked(false);
+                    getNewsWeb(1);
+                }
+            }
+        });
+        fitnessNewsTgl.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                foodNewsTgl.setChecked(false);
+                getNewsWeb(2);
+            }
+        });
+
         return v;
     }
 
+private void getNewsWeb(int typeId){
+    ApiInterface apiService =
+            ApiClient.getClient().create(ApiInterface.class);
+    final ProgressDialog waitingDialog = new ProgressDialog(getContext());
+    waitingDialog.setMessage("لظفا چند لحظه منتظر بمانبد...");
+    waitingDialog.show();
+    Call<RetNewsList> call = apiService.getNewsList(0,10,typeId);
+    call.enqueue(new Callback<RetNewsList>() {
+        @Override
+        public void onResponse(Call<RetNewsList> call, Response<RetNewsList> response) {
+            waitingDialog.dismiss();
+            if(response.isSuccessful())
+            Log.d("getNewsWeb", "onResponse: records:"+response.body().getRecordsCount());
+            newsList.removeAll(newsList);
+            newsList.addAll(response.body().getRecords());
+            adapter.notifyDataSetChanged();
+        }
 
+        @Override
+        public void onFailure(Call<RetNewsList> call, Throwable t) {
+            waitingDialog.dismiss();
+
+        }
+    });
+
+}
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);

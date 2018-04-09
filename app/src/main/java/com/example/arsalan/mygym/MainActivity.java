@@ -45,7 +45,6 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -55,9 +54,9 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         ViewPager viewPager = findViewById(R.id.viewpager);
-        if (getIntent().getStringExtra("KEY").equals(KEY_OMOMI))
+        if (getIntent().getStringExtra("KEY") != null && getIntent().getStringExtra("KEY").equals(KEY_OMOMI))
             viewPagerOmomiAdapter = new ViewPagerOmoomiAdapter(getSupportFragmentManager());
-        else if (getIntent().getStringExtra("KEY").equals(KEY_VARZESHKAR))
+        else if (getIntent().getStringExtra("KEY") != null && getIntent().getStringExtra("KEY").equals(KEY_VARZESHKAR))
             viewPagerOmomiAdapter = new ViewPagerVarzeshkarAdapter(getSupportFragmentManager());
         viewPager.setAdapter(viewPagerOmomiAdapter);
         TabLayout tabs = findViewById(R.id.tablayout);
@@ -212,7 +211,6 @@ public class MainActivity extends AppCompatActivity
             return v;
         }
 
-        @Nullable
         @Override
         public CharSequence getPageTitle(int position) {
             return titles[position];

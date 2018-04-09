@@ -489,7 +489,7 @@ public class CityNState {
         }.getType());
     }
 
-    public static Province getProvince(int id) {
+    public static Province getProvince(long id) {
         for (Province p :
                 getProvinceList()) {
             if (p.getId() == id) return p;
@@ -501,10 +501,10 @@ public class CityNState {
         List<City> cityList = new ArrayList<>();
         for (Province p :
                 getProvinceList()) {
-            cityList.addAll(p.getCityList());
+            cityList.addAll(p.getCities());
         }
         for (City c : cityList) {
-            if (c.get_id() == id) {
+            if (c.getId() == id) {
                 return c;
             }
         }

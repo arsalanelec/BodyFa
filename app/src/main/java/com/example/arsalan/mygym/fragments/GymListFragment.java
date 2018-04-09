@@ -1,28 +1,20 @@
 package com.example.arsalan.mygym.fragments;
 
 import android.content.Context;
-import android.database.DataSetObserver;
-import android.graphics.Color;
-import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
-import android.widget.TextView;
 
-import com.example.arsalan.mygym.Objects.CityNState;
 import com.example.arsalan.mygym.Objects.Gym;
-import com.example.arsalan.mygym.Objects.Province;
 import com.example.arsalan.mygym.R;
 import com.example.arsalan.mygym.adapters.AdapterGymList;
+import com.example.arsalan.mygym.adapters.AdapterProvinceSp;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -96,7 +88,7 @@ public class GymListFragment extends Fragment {
         Spinner provinceSpn = v.findViewById(R.id.spnProvince);
         provinceSpn.setPrompt("استان خود را انتخاب نمایید");
 
-        provinceSpn.setAdapter(new ProvinceAdapter());
+        provinceSpn.setAdapter(new AdapterProvinceSp());
         v.setRotation(180);
         return v;
     }
@@ -134,90 +126,5 @@ public class GymListFragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
-    class ProvinceAdapter implements SpinnerAdapter {
 
-        List<Province> provinceList;
-
-        public ProvinceAdapter() {
-            provinceList = new ArrayList<>();
-            this.provinceList.addAll(CityNState.getProvinceList());
-        }
-
-        @Override
-        public View getDropDownView(int i, View view, ViewGroup viewGroup) {
-            if (view == null) {
-                view = new TextView(getContext());
-                Typeface typeface = ResourcesCompat.getFont(getContext(), R.font.iran_sans_mobile);
-
-                ((TextView) view).setTypeface(typeface);
-                ((TextView) view).setTextSize(TypedValue.COMPLEX_UNIT_SP, 10);
-                ((TextView) view).setTextColor(Color.BLACK);
-            }
-            ((TextView) view).setText(getItem(i).getName());
-            return view;
-        }
-
-        @Override
-        public void registerDataSetObserver(DataSetObserver dataSetObserver) {
-
-        }
-
-        @Override
-        public void unregisterDataSetObserver(DataSetObserver dataSetObserver) {
-
-        }
-
-        @Override
-        public int getCount() {
-            return provinceList.size();
-        }
-
-        @Override
-        public Province getItem(int i) {
-            return provinceList.get(i);
-        }
-
-        @Override
-        public long getItemId(int i) {
-            return provinceList.get(i).getId();
-        }
-
-        @Override
-        public boolean hasStableIds() {
-            return true;
-        }
-
-        @Override
-        public View getView(int i, View view, ViewGroup viewGroup) {
-            if (view == null) {
-                view = new TextView(getContext());
-                Typeface typeface = ResourcesCompat.getFont(getContext(), R.font.iran_sans_mobile);
-
-                ((TextView) view).setTypeface(typeface);
-                ((TextView) view).setTextSize(TypedValue.COMPLEX_UNIT_SP, 10);
-                ((TextView) view).setTextColor(Color.BLACK);
-            }
-            if (i == 0) {
-                ((TextView) view).setText("استان خود را انتخاب نمایید");
-                return view;
-            }
-            ((TextView) view).setText(getItem(i-1).getName());
-            return view;
-        }
-
-        @Override
-        public int getItemViewType(int i) {
-            return 0;
-        }
-
-        @Override
-        public int getViewTypeCount() {
-            return 1;
-        }
-
-        @Override
-        public boolean isEmpty() {
-            return false;
-        }
-    }
 }

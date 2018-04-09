@@ -1,11 +1,28 @@
 package com.example.arsalan.mygym;
 
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
+import com.example.arsalan.mygym.Objects.Token;
 import com.example.arsalan.mygym.fragments.LoginFragment;
 import com.example.arsalan.mygym.fragments.RegisterFragment;
+import com.example.arsalan.mygym.retrofit.ApiClient;
+import com.example.arsalan.mygym.retrofit.ApiInterface;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity implements
         LoginFragment.OnFragmentInteractionListener
@@ -35,13 +52,55 @@ public class LoginActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void login() {
+    public void login(String userName, String password) {
+        final ProgressDialog waitingDialog = new ProgressDialog(LoginActivity.this);
+        waitingDialog.setMessage("لظفا چند لحظه منتظر بمانبد...");
+        waitingDialog.show();
+        ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
+        Call<Token> call = apiService.getToken("password", password, userName);
+        call.enqueue(new Callback<Token>() {
+            @Override
+            public void onResponse(Call<Token> call, Response<Token> response) {
+                waitingDialog.dismiss();
+                if (response.isSuccessful()) {
+                    if (response.body() != null) {
+                        Log.d("login.onResponse", "onResponse: " + response.body().getToken());
+
+                        Intent i = new Intent();
+                        i.setClass(LoginActivity.this, MainActivity.class);
+                        i.putExtra("KEY", MainActivity.KEY_OMOMI);
+                        startActivity(i);
+                    }
+                } else {
+                    try {
+                        JSONObject jsonObject = new JSONObject(response.errorBody().string());
+                        Log.d("login.onResponse", "onResponse: not Success! " +
+                                jsonObject.getString("error"));
+                        if (jsonObject.getString("error") != null && jsonObject.getString("error").contains("invalid_grant")) {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
+                            builder.setMessage("نام کاربری و یا رمز ورود اشتباه است!").create().show();
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Token> call, Throwable t) {
+                waitingDialog.dismiss();
+                Log.d("login.onFailure", "onFailure "+t.getLocalizedMessage());
+                Toast.makeText(LoginActivity.this,"خظایی رویداده است.\nلطفا مجددا تلاش کنید!",Toast.LENGTH_LONG).show();
+            }
+        });
 
     }
 
     @Override
-    public void gotoRegisterationPage() {
-        getSupportFragmentManager().beginTransaction().replace(R.id.content, new RegisterFragment()).commit();
+    public void gotoRegistrationPage(int choice) {
+        getSupportFragmentManager().beginTransaction().replace(R.id.content, RegisterFragment.newInstance(choice)).commit();
 
     }
 
@@ -52,6 +111,7 @@ public class LoginActivity extends AppCompatActivity implements
 
     @Override
     public void gotoLoginPage() {
+
         getSupportFragmentManager().beginTransaction().replace(R.id.content, new LoginFragment()).commit();
 
     }

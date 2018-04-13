@@ -36,4 +36,5 @@
     <string name="contact_us">تماس با ما</string>
     <string name="title_activity_profile_trained">مربی</string>
     <string name="gym">باشگاه</string>
+    <string name="title_activity_news_detail">NewsDetailActivity</string>
 </resources>

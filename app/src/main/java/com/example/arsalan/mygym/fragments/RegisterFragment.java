@@ -78,7 +78,7 @@ public class RegisterFragment extends Fragment {
         // Inflate the layout for this fragment
         final View v = inflater.inflate(R.layout.fragment_register, container, false);
         TextView loginTV = v.findViewById(R.id.txtLogin);
-        TextView titleTv = v.findViewById(R.id.txtTitle);
+        TextView titleTv = v.findViewById(R.id.txtAddress);
 
 
         final Spinner daySp = v.findViewById(R.id.spDateDay);

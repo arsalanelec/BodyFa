@@ -1,5 +1,6 @@
 package com.example.arsalan.mygym.fragments;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.database.DataSetObserver;
 import android.graphics.Color;
@@ -10,6 +11,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,12 +24,19 @@ import android.widget.ToggleButton;
 
 import com.example.arsalan.mygym.Objects.CityNState;
 import com.example.arsalan.mygym.Objects.Province;
+import com.example.arsalan.mygym.Objects.RetTrainerList;
 import com.example.arsalan.mygym.Objects.Trainer;
 import com.example.arsalan.mygym.R;
 import com.example.arsalan.mygym.adapters.AdapterTrainers;
+import com.example.arsalan.mygym.retrofit.ApiClient;
+import com.example.arsalan.mygym.retrofit.ApiInterface;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 /**
@@ -48,7 +57,12 @@ public class TrainerListFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    private List<Trainer> trainerList;
     private OnFragmentInteractionListener mListener;
+    private AdapterTrainers adapter;
+
+    private ToggleButton byMedalBtn;
+    private ToggleButton byRankBtn;
 
     public TrainerListFragment() {
         // Required empty public constructor
@@ -87,11 +101,8 @@ public class TrainerListFragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_trainer_list, container, false);
         RecyclerView rv = v.findViewById(R.id.rvTrainers);
-        List<Trainer> trainerList = new ArrayList<>();
-
-        for (int i = 0; i < 20; i++) trainerList.add(new Trainer());
-
-        AdapterTrainers adapter = new AdapterTrainers(getActivity(), trainerList);
+        trainerList = new ArrayList<>();
+        adapter = new AdapterTrainers(getActivity(), trainerList);
         rv.setAdapter(adapter);
         rv.setLayoutManager(new GridLayoutManager(getActivity(), 3));
 
@@ -100,21 +111,25 @@ public class TrainerListFragment extends Fragment {
 
         provinceSpn.setAdapter(new ProvinceAdapter());
 
-        final ToggleButton byMedalBtn=v.findViewById(R.id.btnByMedals);
-        final ToggleButton byRankBtn=v.findViewById(R.id.btnByRank);
+        byMedalBtn = v.findViewById(R.id.btnByMedals);
+        byRankBtn = v.findViewById(R.id.btnByRank);
         byMedalBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if(b)byRankBtn.setChecked(false);
+                byRankBtn.setChecked(!b);
+                getTrainerWeb(0, 0, b ? 1 : 2);
+                compoundButton.setEnabled(!b);
             }
         });
         byRankBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if(b)byMedalBtn.setChecked(false);
+                byMedalBtn.setChecked(!b);
+                compoundButton.setEnabled(!b);
             }
         });
 
+        getTrainerWeb(0, 0, 1);
         v.setRotation(180);
         return v;
     }
@@ -150,6 +165,33 @@ public class TrainerListFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    private void getTrainerWeb(int cityId, int gymId, int sortType) {
+        ApiInterface apiService =
+                ApiClient.getClient().create(ApiInterface.class);
+        final ProgressDialog waitingDialog = new ProgressDialog(getContext());
+        waitingDialog.setMessage("لظفا چند لحظه منتظر بمانبد...");
+        waitingDialog.show();
+        Call<RetTrainerList> call = apiService.getTrainerList(0, 10, gymId, cityId, sortType);
+        call.enqueue(new Callback<RetTrainerList>() {
+            @Override
+            public void onResponse(Call<RetTrainerList> call, Response<RetTrainerList> response) {
+                waitingDialog.dismiss();
+                if (response.isSuccessful())
+                    Log.d("getNewsWeb", "onResponse: records:" + response.body().getRecordsCount());
+                trainerList.removeAll(trainerList);
+                trainerList.addAll(response.body().getRecords());
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onFailure(Call<RetTrainerList> call, Throwable t) {
+                waitingDialog.dismiss();
+
+            }
+        });
+
     }
 
     class ProvinceAdapter implements SpinnerAdapter {
@@ -219,7 +261,7 @@ public class TrainerListFragment extends Fragment {
                 ((TextView) view).setText("استان خود را انتخاب نمایید");
                 return view;
             }
-            ((TextView) view).setText(getItem(i-1).getName());
+            ((TextView) view).setText(getItem(i - 1).getName());
             return view;
         }
 
@@ -238,4 +280,5 @@ public class TrainerListFragment extends Fragment {
             return false;
         }
     }
+
 }

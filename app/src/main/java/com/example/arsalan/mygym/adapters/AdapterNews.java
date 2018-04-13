@@ -60,7 +60,7 @@ Activity mActivity;
         SimpleDraweeView thumb;
         public VH(View itemView) {
             super(itemView);
-           titleTV= itemView.findViewById(R.id.txtTitle);
+           titleTV= itemView.findViewById(R.id.txtAddress);
            viewCntTV=itemView.findViewById(R.id.txtViewCnt);
            likeCntTV=itemView.findViewById(R.id.txtLikeCnt);
            commentCntTV=itemView.findViewById(R.id.txtCommentCnt);

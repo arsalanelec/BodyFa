@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.example.arsalan.mygym.fragments.TrainerListFragment">
+    tools:context="com.example.arsalan.mygym.fragments.GymListFragment">
 
     <Spinner
         android:id="@+id/spnProvince"
@@ -21,6 +21,7 @@
         android:orientation="horizontal">
 
         <ToggleButton
+            android:id="@+id/btnSortByPoints"
             android:layout_width="wrap_content"
             android:layout_height="32dp"
             android:background="@drawable/button_rect"
@@ -29,10 +30,10 @@
             android:paddingStart="32dp"
             android:textColor="@drawable/text_button_color"
             android:textOff="@string/most_point"
-            android:textOn="@string/most_point"
-            />
+            android:textOn="@string/most_point" />
 
         <ToggleButton
+            android:id="@+id/btnSortByCity"
             android:layout_width="wrap_content"
             android:layout_height="32dp"
             android:background="@drawable/button_rect"
@@ -41,8 +42,7 @@
             android:paddingStart="32dp"
             android:textColor="@drawable/text_button_color"
             android:textOff="@string/by_city"
-            android:textOn="@string/by_city"
-            />
+            android:textOn="@string/by_city" />
     </LinearLayout>
 
     <android.support.v7.widget.RecyclerView

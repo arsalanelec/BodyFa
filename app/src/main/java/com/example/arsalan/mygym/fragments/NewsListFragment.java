@@ -32,12 +32,12 @@ import retrofit2.Response;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link NewsFragment.OnFragmentInteractionListener} interface
+ * {@link NewsListFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link NewsFragment#newInstance} factory method to
+ * Use the {@link NewsListFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class NewsFragment extends Fragment {
+public class NewsListFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -51,7 +51,7 @@ public class NewsFragment extends Fragment {
     private List<News> newsList;
     private AdapterNews adapter;
 
-    public NewsFragment() {
+    public NewsListFragment() {
         // Required empty public constructor
     }
 
@@ -61,11 +61,11 @@ public class NewsFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment NewsFragment.
+     * @return A new instance of fragment NewsListFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static NewsFragment newInstance(String param1, String param2) {
-        NewsFragment fragment = new NewsFragment();
+    public static NewsListFragment newInstance(String param1, String param2) {
+        NewsListFragment fragment = new NewsListFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -92,7 +92,7 @@ public class NewsFragment extends Fragment {
         /*for (int i = 0; i < 20; i++)
             newsList.add(new News());*/
 
-         adapter = new AdapterNews(getActivity(), newsList);
+        adapter = new AdapterNews(getActivity(), newsList);
         newsRV.setAdapter(adapter);
         newsRV.setLayoutManager(new LinearLayoutManager(getActivity()));
         v.setRotation(180);
@@ -105,49 +105,49 @@ public class NewsFragment extends Fragment {
         foodNewsTgl.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if (b) {
-                    fitnessNewsTgl.setChecked(false);
-                    getNewsWeb(1);
-                }
+                compoundButton.setEnabled(!b);
+                fitnessNewsTgl.setChecked(!b);
+                getNewsWeb(b ? 1 : 2);
             }
         });
         fitnessNewsTgl.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                foodNewsTgl.setChecked(false);
-                getNewsWeb(2);
+                foodNewsTgl.setChecked(!b);
+                compoundButton.setEnabled(!b);
             }
         });
 
         return v;
     }
 
-private void getNewsWeb(int typeId){
-    ApiInterface apiService =
-            ApiClient.getClient().create(ApiInterface.class);
-    final ProgressDialog waitingDialog = new ProgressDialog(getContext());
-    waitingDialog.setMessage("لظفا چند لحظه منتظر بمانبد...");
-    waitingDialog.show();
-    Call<RetNewsList> call = apiService.getNewsList(0,10,typeId);
-    call.enqueue(new Callback<RetNewsList>() {
-        @Override
-        public void onResponse(Call<RetNewsList> call, Response<RetNewsList> response) {
-            waitingDialog.dismiss();
-            if(response.isSuccessful())
-            Log.d("getNewsWeb", "onResponse: records:"+response.body().getRecordsCount());
-            newsList.removeAll(newsList);
-            newsList.addAll(response.body().getRecords());
-            adapter.notifyDataSetChanged();
-        }
+    private void getNewsWeb(int typeId) {
+        ApiInterface apiService =
+                ApiClient.getClient().create(ApiInterface.class);
+        final ProgressDialog waitingDialog = new ProgressDialog(getContext());
+        waitingDialog.setMessage("لظفا چند لحظه منتظر بمانبد...");
+        waitingDialog.show();
+        Call<RetNewsList> call = apiService.getNewsList(0, 10, typeId);
+        call.enqueue(new Callback<RetNewsList>() {
+            @Override
+            public void onResponse(Call<RetNewsList> call, Response<RetNewsList> response) {
+                waitingDialog.dismiss();
+                if (response.isSuccessful())
+                    Log.d("getNewsWeb", "onResponse: records:" + response.body().getRecordsCount());
+                newsList.removeAll(newsList);
+                newsList.addAll(response.body().getRecords());
+                adapter.notifyDataSetChanged();
+            }
 
-        @Override
-        public void onFailure(Call<RetNewsList> call, Throwable t) {
-            waitingDialog.dismiss();
+            @Override
+            public void onFailure(Call<RetNewsList> call, Throwable t) {
+                waitingDialog.dismiss();
 
-        }
-    });
+            }
+        });
 
-}
+    }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);

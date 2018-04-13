@@ -4,7 +4,9 @@ package com.example.arsalan.mygym.retrofit;
  * Created by Arsalan on 03-10-2017.
  */
 
+import com.example.arsalan.mygym.Objects.RetGymList;
 import com.example.arsalan.mygym.Objects.RetNewsList;
+import com.example.arsalan.mygym.Objects.RetTrainerList;
 import com.example.arsalan.mygym.Objects.RetroResult;
 import com.example.arsalan.mygym.Objects.Token;
 
@@ -24,7 +26,7 @@ public interface ApiInterface {
 
 
     @FormUrlEncoded
-    @POST("/token")
+    @POST("/api/token")
     Call<Token> getToken(@Field("Grant_type") String grantType, @Field("password") String password, @Field("username") String usernam);
 
     @Multipart
@@ -34,6 +36,14 @@ public interface ApiInterface {
     @Multipart
     @POST("/api/public/getnewslist")
     Call<RetNewsList> getNewsList(@Part("offset") int offset, @Part("limit") int limit, @Part("TypeId") int TypeId );
+
+    @Multipart
+    @POST("/api/public/gettrainerlist")
+    Call<RetTrainerList> getTrainerList(@Part("offset") int offset, @Part("limit") int limit, @Part("GymId") int gymId, @Part("CityId") int cityId, @Part("Sort") int sort );
+
+    @Multipart
+    @POST("/api/public/getgymlist")
+    Call<RetGymList> getGymList(@Part("offset") int offset, @Part("limit") int limit, @Part("CityId") int cityId, @Part("Sort") int sort );
 
     /*@Multipart
     @POST("CustomersWebservice/login")

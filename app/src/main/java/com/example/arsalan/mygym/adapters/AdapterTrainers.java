@@ -7,10 +7,14 @@ import android.support.v7.widget.RecyclerView.Adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RatingBar;
+import android.widget.TextView;
 
 import com.example.arsalan.mygym.Objects.Trainer;
 import com.example.arsalan.mygym.ProfileTrainedActivity;
 import com.example.arsalan.mygym.R;
+import com.example.arsalan.mygym.retrofit.ApiClient;
+import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.util.List;
 
@@ -20,19 +24,20 @@ import java.util.List;
 
 public class AdapterTrainers extends Adapter<AdapterTrainers.VH> {
     List<Trainer> trainerList;
-Activity mActivity;
+    Activity mActivity;
+
     public AdapterTrainers(Activity activity, List<Trainer> trainerList) {
         this.trainerList = trainerList;
-        this.mActivity=activity;
+        this.mActivity = activity;
     }
 
     @Override
     public VH onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView=LayoutInflater.from(mActivity).inflate(R.layout.item_trainer,parent,false);
+        View itemView = LayoutInflater.from(mActivity).inflate(R.layout.item_trainer, parent, false);
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i=new Intent();
+                Intent i = new Intent();
                 i.setClass(mActivity, ProfileTrainedActivity.class);
                 mActivity.startActivity(i);
             }
@@ -41,8 +46,13 @@ Activity mActivity;
     }
 
     @Override
-    public void onBindViewHolder(VH holder, int position) {
-
+    public void onBindViewHolder(VH h, int position) {
+        Trainer t = trainerList.get(position);
+        h.thumbImg.setImageURI(ApiClient.BASE_URL+t.getThumbUrl());
+        h.pointsTV.setText(String.valueOf(t.getPoint()));
+        h.ratingBar.setRating(t.getRate());
+        h.nameTV.setText(t.getName());
+        h.honorTV.setText(t.getTitle());
     }
 
     @Override
@@ -51,8 +61,21 @@ Activity mActivity;
     }
 
     class VH extends RecyclerView.ViewHolder {
-        public VH(View itemView) {
-            super(itemView);
+        SimpleDraweeView thumbImg;
+        TextView nameTV;
+        TextView honorTV;
+        TextView pointsTV;
+        RatingBar ratingBar;
+
+
+        public VH(View iv) {
+            super(iv);
+            nameTV=iv.findViewById(R.id.txtName);
+            honorTV=iv.findViewById(R.id.txtAddress);
+            ratingBar=iv.findViewById(R.id.ratingBar);
+            pointsTV = iv.findViewById(R.id.txtPoints);
+            thumbImg = iv.findViewById(R.id.imgThumb);
+
         }
     }
 }

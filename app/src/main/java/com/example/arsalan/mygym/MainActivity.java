@@ -27,7 +27,7 @@ import com.example.arsalan.mygym.fragments.GymListFragment;
 import com.example.arsalan.mygym.fragments.HomeFragment;
 import com.example.arsalan.mygym.fragments.MyGymFragment;
 import com.example.arsalan.mygym.fragments.MyTrainerFragment;
-import com.example.arsalan.mygym.fragments.NewsFragment;
+import com.example.arsalan.mygym.fragments.NewsListFragment;
 import com.example.arsalan.mygym.fragments.TrainerListFragment;
 import com.example.arsalan.mygym.fragments.TutorialFragment;
 
@@ -180,7 +180,7 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         public Fragment getItem(int position) {
-            if (position == 1) return new NewsFragment();
+            if (position == 1) return new NewsListFragment();
             if (position == 4) return new GymListFragment();
             if (position == 3) return new TrainerListFragment();
             if (position == 2) return new TutorialFragment();

@@ -55,6 +55,7 @@ public class AdapterGymList extends Adapter<AdapterGymList.VH> {
         h.gymNameTV.setText(g.getName());
         h.thumbImg.setImageURI(ApiClient.BASE_URL+g.getPictureUrl());
         Log.d("AdapterGymList", "onBindViewHolder: rate:"+g.getRate());
+
     }
 
     @Override
@@ -73,7 +74,7 @@ public class AdapterGymList extends Adapter<AdapterGymList.VH> {
             super(iv);
             thumbImg = iv.findViewById(R.id.imgThumb);
             gymNameTV = iv.findViewById(R.id.txtName);
-            addressTV = iv.findViewById(R.id.txtAddress);
+            addressTV = iv.findViewById(R.id.txtTitle);
             pointsTV = iv.findViewById(R.id.txtPoints);
             ratingBar = iv.findViewById(R.id.ratingBar);
         }

@@ -16,7 +16,6 @@
             android:layout_height="32dp"
             android:layout_margin="4dp"
             android:background="@drawable/button_round"
-            android:checked="false"
             android:fontFamily="@font/iran_sans_mobile"
             android:paddingEnd="32dp"
             android:paddingStart="32dp"
@@ -35,6 +34,7 @@
             android:paddingEnd="32dp"
             android:paddingStart="32dp"
             android:text="ToggleButton"
+            android:checked="true"
             android:textColor="@drawable/text_button_color"
             android:textOff="@string/fitnessNews"
             android:textOn="@string/fitnessNews"/>

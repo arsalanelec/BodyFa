@@ -94,6 +94,10 @@ public class LoginFragment extends Fragment {
         });
         username = v.findViewById(R.id.txtUsername);
         password = v.findViewById(R.id.txtPassword);
+
+        if(mUsername!=null)username.setText(mUsername);
+        if(mPassword!=null) password.setText(mPassword);
+
         Button loginBtn = v.findViewById(R.id.btnLogin);
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override

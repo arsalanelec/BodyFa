@@ -30,7 +30,8 @@
             android:paddingStart="32dp"
             android:textColor="@drawable/text_button_color"
             android:textOff="@string/most_point"
-            android:textOn="@string/most_point" />
+            android:checked="true"
+            android:textOn="@string/most_point"/>
 
         <ToggleButton
             android:id="@+id/btnSortByCity"

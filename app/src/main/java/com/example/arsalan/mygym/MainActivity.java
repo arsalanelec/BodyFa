@@ -1,5 +1,6 @@
 package com.example.arsalan.mygym;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -143,7 +144,9 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_home) {
             // Handle the camera action
         } else if (id == R.id.nav_user_account) {
-
+            Intent i = new Intent();
+            i.setClass(MainActivity.this, EditProfileActivity.class);
+            startActivity(i);
         } else if (id == R.id.nav_faq) {
 
         } else if (id == R.id.nav_contact_us) {

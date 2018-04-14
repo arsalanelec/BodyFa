@@ -1,6 +1,7 @@
 package com.example.arsalan.mygym.adapters;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.Adapter;
 import android.view.LayoutInflater;
@@ -8,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.arsalan.mygym.NewsDetailActivity;
 import com.example.arsalan.mygym.Objects.News;
 import com.example.arsalan.mygym.R;
 import com.example.arsalan.mygym.retrofit.ApiClient;
@@ -21,28 +23,37 @@ import java.util.List;
 
 public class AdapterNews extends Adapter<AdapterNews.VH> {
     List<News> newsList;
-Activity mActivity;
-    public AdapterNews(Activity activity,List<News> newsList) {
+    Activity mActivity;
+
+    public AdapterNews(Activity activity, List<News> newsList) {
         this.newsList = newsList;
-        this.mActivity=activity;
+        this.mActivity = activity;
     }
 
     @Override
     public VH onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView=LayoutInflater.from(mActivity).inflate(R.layout.item_news,parent,false);
+        View itemView = LayoutInflater.from(mActivity).inflate(R.layout.item_news, parent, false);
         return new VH(itemView);
     }
 
     @Override
-    public void onBindViewHolder(VH h, int position) {
-        News news=newsList.get(position);
+    public void onBindViewHolder(final VH h, int position) {
+        final News news = newsList.get(position);
         h.titleTV.setText(news.getTitle());
         h.viewCntTV.setText(String.valueOf(news.getVisitcnt()));
         h.likeCntTV.setText(String.valueOf(news.getLikeCnt()));
         h.commentCntTV.setText(String.valueOf(news.getCommentCnt()));
         h.dateTV.setText(news.getDate());
-        h.thumb.setImageURI(ApiClient.BASE_URL+news.getThumbUrl());
-
+        h.thumb.setImageURI(ApiClient.BASE_URL + news.getThumbUrl());
+        h.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent();
+                i.setClass(h.itemView.getContext(), NewsDetailActivity.class);
+                i.putExtra(NewsDetailActivity.KEY_NEWS_ID, news.getId());
+                h.itemView.getContext().startActivity(i);
+            }
+        });
 
     }
 
@@ -58,14 +69,15 @@ Activity mActivity;
         TextView commentCntTV;
         TextView dateTV;
         SimpleDraweeView thumb;
+
         public VH(View itemView) {
             super(itemView);
-           titleTV= itemView.findViewById(R.id.txtAddress);
-           viewCntTV=itemView.findViewById(R.id.txtViewCnt);
-           likeCntTV=itemView.findViewById(R.id.txtLikeCnt);
-           commentCntTV=itemView.findViewById(R.id.txtCommentCnt);
-           dateTV=itemView.findViewById(R.id.txtDate);
-           thumb=itemView.findViewById(R.id.imgThumb);
+            titleTV = itemView.findViewById(R.id.txtTitle);
+            viewCntTV = itemView.findViewById(R.id.txtViewCnt);
+            likeCntTV = itemView.findViewById(R.id.txtLikeCnt);
+            commentCntTV = itemView.findViewById(R.id.txtCommentCnt);
+            dateTV = itemView.findViewById(R.id.txtDate);
+            thumb = itemView.findViewById(R.id.imgThumb);
         }
     }
 }

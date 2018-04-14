@@ -11,7 +11,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.example.arsalan.mygym.Objects.Trainer;
-import com.example.arsalan.mygym.ProfileTrainedActivity;
+import com.example.arsalan.mygym.ProfileTrainerActivity;
 import com.example.arsalan.mygym.R;
 import com.example.arsalan.mygym.retrofit.ApiClient;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -34,25 +34,27 @@ public class AdapterTrainers extends Adapter<AdapterTrainers.VH> {
     @Override
     public VH onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(mActivity).inflate(R.layout.item_trainer, parent, false);
-        itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent();
-                i.setClass(mActivity, ProfileTrainedActivity.class);
-                mActivity.startActivity(i);
-            }
-        });
         return new VH(itemView);
     }
 
     @Override
     public void onBindViewHolder(VH h, int position) {
-        Trainer t = trainerList.get(position);
+        final Trainer t = trainerList.get(position);
         h.thumbImg.setImageURI(ApiClient.BASE_URL+t.getThumbUrl());
         h.pointsTV.setText(String.valueOf(t.getPoint()));
         h.ratingBar.setRating(t.getRate());
         h.nameTV.setText(t.getName());
         h.honorTV.setText(t.getTitle());
+        h.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent();
+                i.putExtra(ProfileTrainerActivity.KEY_NAME, t.getName());
+                i.putExtra(ProfileTrainerActivity.KEY_RATE, t.getRate());
+                i.setClass(mActivity, ProfileTrainerActivity.class);
+                mActivity.startActivity(i);
+            }
+        });
     }
 
     @Override
@@ -71,7 +73,7 @@ public class AdapterTrainers extends Adapter<AdapterTrainers.VH> {
         public VH(View iv) {
             super(iv);
             nameTV=iv.findViewById(R.id.txtName);
-            honorTV=iv.findViewById(R.id.txtAddress);
+            honorTV=iv.findViewById(R.id.txtTitle);
             ratingBar=iv.findViewById(R.id.ratingBar);
             pointsTV = iv.findViewById(R.id.txtPoints);
             thumbImg = iv.findViewById(R.id.imgThumb);

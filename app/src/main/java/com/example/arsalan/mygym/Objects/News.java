@@ -7,9 +7,15 @@ import com.google.gson.annotations.SerializedName;
  */
 
 public class News {
+
+    @SerializedName("NewsId")
+    long id;
+
     String title;
+
     @SerializedName("Description")
     String desc;
+
     @SerializedName("NewsDateFa")
     String date;
 
@@ -23,6 +29,8 @@ public class News {
     int commentCnt;
     String thumbUrl;
 
+    String pictureUrl;
+
     public String getThumbUrl() {
         return thumbUrl;
     }
@@ -35,6 +43,10 @@ public class News {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public long getId() {
+        return id;
     }
 
     public String getDesc() {
@@ -75,5 +87,9 @@ public class News {
 
     public void setCommentCnt(int commentCnt) {
         this.commentCnt = commentCnt;
+    }
+
+    public String getPictureUrl() {
+        return pictureUrl;
     }
 }

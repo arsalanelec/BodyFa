@@ -39,4 +39,6 @@
     <string name="title_activity_news_detail">شرح خبر</string>
     <string name="title_activity_edit_profile">ویرایش نمایه کاربر</string>
     <string name="userComments">نظرات کاربران (%1d نظر)</string>
+    <string name="title_activity_post_content">PostContentActivity</string>
+    <string name="send_content">ارسال مطلب</string>
 </resources>

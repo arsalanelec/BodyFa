@@ -15,6 +15,7 @@ import com.example.arsalan.mygym.Objects.Token;
 
 import java.util.Map;
 
+import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Field;
@@ -65,6 +66,18 @@ public interface ApiInterface {
     @Multipart
     @POST("/api/users/SendNewsComment")
     Call<RetroResult> sendNewsComment(@Header("Authorization") String token,@Part("UserId") long userId ,@Part("NewsId") long newsId , @Part("Comment") String Comment );
+/*NewsTypeId
+UserId
+GymId
+Content
+PictureUrl
+ThumbUrl*/
+    @Multipart
+    @POST("/api/users/SendContent")
+    Call<RetroResult> sendContent(@Header("Authorization") String token,@Part("UserId") long userId ,@Part("NewsTypeId") int newsTypeId , @Part("Content") String content ,@Part MultipartBody.Part image);
 
+    @Multipart
+    @POST("/api/users/GetActivationCode")
+    Call<RetroResult> getActivationCode(@Header("Authorization") String token,@Part("UserId") long userId ,@Part("Mobile") long mobileNo  );
 
 }

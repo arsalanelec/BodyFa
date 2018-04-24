@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,8 +17,8 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.example.arsalan.mygym.MyApplication;
 import com.example.arsalan.mygym.Objects.RetroResult;
 import com.example.arsalan.mygym.R;
 import com.example.arsalan.mygym.adapters.AdapterCitySp;
@@ -26,12 +27,8 @@ import com.example.arsalan.mygym.retrofit.ApiClient;
 import com.example.arsalan.mygym.retrofit.ApiInterface;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import okhttp3.MediaType;
-import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -199,9 +196,44 @@ public class RegisterFragment extends Fragment {
                     weightET.setText("0");
                 }
                 if (hasError) return;
+
                 ApiInterface apiService =
                         ApiClient.getClient().create(ApiInterface.class);
-                RequestBody userNameReq = RequestBody.create(MediaType.parse("text/plain"), usernameET.getText().toString());
+
+
+                final ProgressDialog waitingDialog = new ProgressDialog(getContext());
+                waitingDialog.setMessage("لظفا چند لحظه منتظر بمانبد...");
+                waitingDialog.show();
+                Log.d("Activation", "user id:\""+((MyApplication) getActivity().getApplication()).getCurrentUser().getId()
+                +"\" mobile:"+mobileET.getText().toString());
+
+                Call<RetroResult> call = apiService.getActivationCode("Bearer " + ((MyApplication) getActivity().getApplication()).getCurrentToken().getToken(), 1, Long.parseLong(mobileET.getText().toString()));
+
+                call.enqueue(new Callback<RetroResult>() {
+                    @Override
+                    public void onResponse(Call<RetroResult> call, Response<RetroResult> response) {
+                        waitingDialog.dismiss();
+                        if(response.isSuccessful()
+                                && response.body().getResult()!=null
+                                && response.body().getResult().contains("OK"))
+                            Log.d("Activation", "onResponse: Code sent!");
+                        else
+                            Log.d("Activation", "onResponse: error:"+response.body().getResult());
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<RetroResult> call, Throwable t) {
+                        waitingDialog.dismiss();
+                        Log.d("Activation", "onFailure: "+t.getMessage());
+
+                    }
+                });
+
+
+
+
+/*                RequestBody userNameReq = RequestBody.create(MediaType.parse("text/plain"), usernameET.getText().toString());
                 RequestBody bodyPassword = RequestBody.create(MediaType.parse("text/plain"), passwordET.getText().toString());
                 RequestBody nameReq = RequestBody.create(MediaType.parse("text/plain"), nameET.getText().toString());
                 RequestBody genderReq = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(maleRB.isChecked()));
@@ -266,7 +298,7 @@ public class RegisterFragment extends Fragment {
                     public void onFailure(Call<RetroResult> call, Throwable t) {
                         waitingDialog.dismiss();
                     }
-                });
+                });*/
 
             }
         });
@@ -275,7 +307,9 @@ public class RegisterFragment extends Fragment {
 
     public interface OnFragmentInteractionListener {
         void register();
+
         void login(String username, String password);
+
         void gotoLoginPage();
 
     }
@@ -369,4 +403,6 @@ public class RegisterFragment extends Fragment {
             return false;
         }
     }
+
+
 }

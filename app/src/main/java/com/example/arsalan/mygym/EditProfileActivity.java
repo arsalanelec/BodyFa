@@ -10,6 +10,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.theartofdev.edmodo.cropper.CropImage;
@@ -26,7 +28,26 @@ public class EditProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_edit_profile);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        TextView userNameTV=findViewById(R.id.txtName);
+        userNameTV.setText(((MyApplication)getApplication()).getCurrentUser().getName());
         avatar = findViewById(R.id.avatar);
+        Button editProfileBtn = findViewById(R.id.btnEditProfile);
+        editProfileBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                CropImage.activity()
+                        .setGuidelines(CropImageView.Guidelines.ON)
+                        .setCropShape(CropImageView.CropShape.OVAL)
+                        .setActivityTitle("انتخاب عکس نمایه")
+                        .setAllowFlipping(false)
+                        .setAllowRotation(false)
+                        .setAspectRatio(1, 1)
+                        .setFixAspectRatio(true)
+                        .setRequestedSize(128, 128)
+                        .start(EditProfileActivity.this);
+
+            }
+        });
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -39,16 +60,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
                             }
                         }).show();
-                CropImage.activity()
-                        .setGuidelines(CropImageView.Guidelines.ON)
-                        .setCropShape(CropImageView.CropShape.OVAL)
-                        .setActivityTitle("انتخاب عکس نمایه")
-                        .setAllowFlipping(false)
-                        .setAllowRotation(false)
-                        .setAspectRatio(1, 1)
-                        .setFixAspectRatio(true)
-                        .setRequestedSize(128, 128)
-                        .start(EditProfileActivity.this);
+
             }
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

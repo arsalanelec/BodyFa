@@ -12,6 +12,10 @@
             android:id="@+id/nav_user_account"
             android:icon="@drawable/ic_user"
             android:title="@string/user_account" />
+        <item
+            android:id="@+id/nav_user_send_content"
+            android:icon="@drawable/ic_send__24dp"
+            android:title="@string/send_content" />
 
     </group>
 

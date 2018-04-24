@@ -1,11 +1,16 @@
 package com.example.arsalan.mygym;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -32,10 +37,23 @@ public class LoginActivity extends AppCompatActivity implements
         , RegisterFragment.OnFragmentInteractionListener {
 
 
-    private View mContentView;
-
     private final String KEY_USERNAME = "myGymUserNameKey";
     private final String KEY_PASSWORD = "myGymPassword";
+
+    private static final int ACTIVITY_REGISTRATION1 = 0;
+    private static final int ACTIVITY_SENDALERT3 = 1;
+    private static final int ACTIVITY_REGISTRATION2 = 2;
+
+    private static final int MY_PERMISSIONS_REQUEST_READ_SMS = 110;
+    private static final int MY_PERMISSIONS_REQUEST_RECEIVE_SMS = 111;
+
+    Context context;
+    Intent intent;
+    String db_activation = null;
+
+    public LoginActivity() {
+        this.context = this;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +61,7 @@ public class LoginActivity extends AppCompatActivity implements
 
         setContentView(R.layout.activity_login);
 
-        mContentView = findViewById(R.id.fullscreen_content);
+        View mContentView = findViewById(R.id.fullscreen_content);
         mContentView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
                 | View.SYSTEM_UI_FLAG_FULLSCREEN
                 | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
@@ -52,13 +70,127 @@ public class LoginActivity extends AppCompatActivity implements
                 | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
         if (getSupportActionBar() != null)
             getSupportActionBar().hide();
+        registerListenerforSms();
+
+        // Here, thisActivity is the current activity
+        if (ContextCompat.checkSelfPermission(context,
+                Manifest.permission.RECEIVE_SMS)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            // Permission is not granted
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(LoginActivity.this,
+                    Manifest.permission.RECEIVE_SMS)) {
+
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+
+            } else {
+
+                // No explanation needed; request the permission
+                ActivityCompat.requestPermissions(LoginActivity.this,
+                        new String[]{Manifest.permission.RECEIVE_SMS},
+                        MY_PERMISSIONS_REQUEST_RECEIVE_SMS);
+
+                // MY_PERMISSIONS_REQUEST_READ_SMS is an
+                // app-defined int constant. The callback method gets the
+                // result of the request.
+            }
+        } else {
+            // Here, thisActivity is the current activity
+            if (ContextCompat.checkSelfPermission(context,
+                    Manifest.permission.READ_SMS)
+                    != PackageManager.PERMISSION_GRANTED) {
+
+                // Permission is not granted
+                // Should we show an explanation?
+                if (ActivityCompat.shouldShowRequestPermissionRationale(LoginActivity.this,
+                        Manifest.permission.READ_SMS)) {
+
+                    // Show an explanation to the user *asynchronously* -- don't block
+                    // this thread waiting for the user's response! After the user
+                    // sees the explanation, try again to request the permission.
+
+                } else {
+
+                    // No explanation needed; request the permission
+                    ActivityCompat.requestPermissions(LoginActivity.this,
+                            new String[]{Manifest.permission.READ_SMS},
+                            MY_PERMISSIONS_REQUEST_READ_SMS);
+
+                    // MY_PERMISSIONS_REQUEST_READ_SMS is an
+                    // app-defined int constant. The callback method gets the
+                    // result of the request.
+                }
+            } else {
+           //     registerListenerforSms();
+            }
+        }
+
+
+        // intent=new Intent(this,Registration.class);
+
+//        intent.addFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
+        //       startActivityForResult(intent,ACTIVITY_REGISTRATION1);
 
         String username = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(KEY_USERNAME, "");
         String password = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(KEY_PASSWORD, "");
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.content, LoginFragment.newInstance(username,password)).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.content, LoginFragment.newInstance(username, password)).commit();
 
 
+    }
+
+    private void registerListenerforSms() {
+        // Permission has already been granted
+        SMSReceiver.bindListener(new SmsListener() {
+            @Override
+            public void messageReceived(String messageText) {
+                Toast.makeText(context, "OTP: " + messageText, Toast.LENGTH_LONG).show();
+                Log.d("registerListenerforSms", "messageReceived: "+messageText);
+            }
+        });
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_RECEIVE_SMS:
+            {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+
+            }
+            break;
+            case MY_PERMISSIONS_REQUEST_READ_SMS: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                  //  registerListenerforSms();
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                return;
+            }
+
+            // other 'case' lines to check for other
+            // permissions this app might request.
+        }
     }
 
     @Override
@@ -117,7 +249,7 @@ public class LoginActivity extends AppCompatActivity implements
                 waitingDialog.dismiss();
                 if (response.isSuccessful()) {
                     if (response.body() != null) {
-                        Log.d("login.onResponse", "onResponse: " + response.body().getRecord().getName());
+                        Log.d("login.onResponse", "onResponse: name:" + response.body().getRecord().getName() + " id:" + response.body().getRecord().getId());
                         ((MyApplication) getApplication()).setCurrentUser(response.body().getRecord());
                         Toast.makeText(LoginActivity.this, response.body().getRecord().getName() + " خوش آمدید!", Toast.LENGTH_LONG).show();
 
@@ -127,7 +259,7 @@ public class LoginActivity extends AppCompatActivity implements
 
                         Intent i = new Intent();
                         i.setClass(LoginActivity.this, MainActivity.class);
-                        i.putExtra("KEY", MainActivity.KEY_OMOMI);
+                        i.putExtra("KEY", MainActivity.KEY_VARZESHKAR);
                         startActivity(i);
                     }
                 } else {
@@ -151,6 +283,9 @@ public class LoginActivity extends AppCompatActivity implements
             public void onFailure(Call<RetUserProfile> call, Throwable t) {
                 waitingDialog.dismiss();
                 Log.d("login.onFailure", "onFailure " + t.getLocalizedMessage());
+                if (t.getMessage().contains("No address associated with hostname"))
+                    Toast.makeText(LoginActivity.this, "خظایی رویداده است. آبا به اینترنت متصل هستید؟\nلطفا مجددا تلاش کنید!", Toast.LENGTH_LONG).show();
+
                 Toast.makeText(LoginActivity.this, "خظایی رویداده است.\nلطفا مجددا تلاش کنید!", Toast.LENGTH_LONG).show();
             }
         });
@@ -159,7 +294,10 @@ public class LoginActivity extends AppCompatActivity implements
 
     @Override
     public void gotoRegistrationPage(int choice) {
-        getSupportFragmentManager().beginTransaction().replace(R.id.content, RegisterFragment.newInstance(choice)).commit();
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.content, RegisterFragment.newInstance(choice))
+                .addToBackStack("1")
+                .commit();
 
     }
 
@@ -173,5 +311,10 @@ public class LoginActivity extends AppCompatActivity implements
 
         getSupportFragmentManager().beginTransaction().replace(R.id.content, new LoginFragment()).commit();
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 }

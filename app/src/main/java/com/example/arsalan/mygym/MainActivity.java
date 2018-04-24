@@ -22,6 +22,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.arsalan.mygym.fragments.GymListFragment;
@@ -54,6 +55,15 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        ImageButton switchBtn = toolbar.findViewById(R.id.btnSwitch);
+        switchBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
+
         ViewPager viewPager = findViewById(R.id.viewpager);
         if (getIntent().getStringExtra("KEY") != null && getIntent().getStringExtra("KEY").equals(KEY_OMOMI))
             viewPagerOmomiAdapter = new ViewPagerOmoomiAdapter(getSupportFragmentManager());
@@ -116,8 +126,8 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
+        //  getMenuInflater().inflate(R.menu.main, menu);
+        return false;
     }
 
     @Override
@@ -151,6 +161,10 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_contact_us) {
 
+        }else if(id==R.id.nav_user_send_content){
+            Intent i = new Intent();
+            i.setClass(MainActivity.this, PostContentActivity.class);
+            startActivity(i);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

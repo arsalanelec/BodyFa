@@ -36,6 +36,7 @@ import retrofit2.Response;
 
 public class NewsDetailActivity extends AppCompatActivity {
     public static final String KEY_NEWS_ID = "new id key";
+    private static final String TAG = "NewsDetailActivity" ;
     private SimpleDraweeView image;
     private TextView titleTV;
     private TextView contentTV;
@@ -123,6 +124,7 @@ public class NewsDetailActivity extends AppCompatActivity {
                 titleTV.setText(news.getTitle());
                 contentTV.setText(news.getDesc());
                 image.setImageURI(ApiClient.BASE_URL + news.getPictureUrl());
+                Log.d(TAG, "onResponse: pictureUrl:"+news.getPictureUrl());
                 commentsCountTV.setText(getString(R.string.userComments, news.getCommentCnt()));
                 getCommentWeb(news.getId());
             }
@@ -149,6 +151,7 @@ public class NewsDetailActivity extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null)
                     Log.d("getNewsWeb", "onResponse: record:" + response.body().getRecords().size());
                 commentList.removeAll(commentList);
+                if(response.body()!=null&&response.body().getRecords().size()>0)
                 commentList.addAll(response.body().getRecords());
                 adapter.notifyDataSetChanged();
             }

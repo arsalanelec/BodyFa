@@ -9,27 +9,33 @@ import com.google.gson.annotations.SerializedName;
 public class News {
 
     @SerializedName("NewsId")
+    private
     long id;
 
-    String title;
+    private String title;
 
     @SerializedName("Description")
+    private
     String desc;
 
     @SerializedName("NewsDateFa")
+    private
     String date;
 
     @SerializedName("ViewCount")
+    private
     int visitcnt;
 
     @SerializedName("LikeCount")
+    private
     int likeCnt;
 
     @SerializedName("CommentCount")
+    private
     int commentCnt;
-    String thumbUrl;
+    private String thumbUrl;
 
-    String pictureUrl;
+    private String pictureUrl;
 
     public String getThumbUrl() {
         return thumbUrl;

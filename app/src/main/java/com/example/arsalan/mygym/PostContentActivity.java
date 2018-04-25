@@ -3,6 +3,9 @@ package com.example.arsalan.mygym;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -23,7 +26,10 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,8 +46,9 @@ public class PostContentActivity extends AppCompatActivity {
     private Uri resultUri;
     private SimpleDraweeView image;
     private Spinner cateSpn;
-    private EditText contentTxt;
+    private EditText contentET;
     private Context mContext;
+    private EditText titleET;
 
     public PostContentActivity() {
         mContext = this;
@@ -55,7 +62,8 @@ public class PostContentActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         cateSpn = (Spinner) findViewById(R.id.spnCategory);
-        contentTxt = findViewById(R.id.etContent);
+        contentET = findViewById(R.id.etContent);
+        titleET = findViewById(R.id.etTitle);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,51 +73,85 @@ public class PostContentActivity extends AppCompatActivity {
                     Toast.makeText(mContext, "لطفا یک عکس انتخاب کنید", Toast.LENGTH_LONG).show();
                     return;
                 }
-                if (contentTxt.getText().toString().length() < 2) {
+                if (contentET.getText().toString().length() < 2) {
 
-                    contentTxt.setError("نوشته کوتاه است");
+                    contentET.setError("نوشته کوتاه است");
+                    return;
+                }
+                if (titleET.getText().toString().length() < 6) {
+                    titleET.setError("عنوان طولانی تری انخاب کنید");
                     return;
                 }
                 File imageFile = new File(resultUri.getPath());
-                // create RequestBody instance from file
-                Log.d(TAG, "onClick: mediatype:" + MimeTypeMap.getFileExtensionFromUrl(resultUri.getPath()));
-                final RequestBody requestFile =
-                        RequestBody.create(
-                                MediaType.parse("image/*"),//MimeTypeMap.getFileExtensionFromUrl(resultUri.getPath())),
-                                imageFile);
-                MultipartBody.Part body =
-                        MultipartBody.Part.createFormData("picture", imageFile.getName(), requestFile);
-                final ProgressDialog waitingDialog = new ProgressDialog(PostContentActivity.this);
-                waitingDialog.setMessage("درحال ارسال مطلب\nلظفا چند لحظه منتظر بمانبد...");
-                waitingDialog.show();
+                Bitmap thumbImage = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(resultUri.getPath()), 128, 128);
+                //create a file to write bitmap data
+                File thumbFile = new File(mContext.getCacheDir(), "thumb.jpg");
+                try {
+                    thumbFile.createNewFile();
+                    //Convert bitmap to byte array
+                    ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                    thumbImage.compress(Bitmap.CompressFormat.JPEG, 60 /*ignored for PNG*/, bos);
+                    byte[] bitmapData = bos.toByteArray();
+                    //write the bytes in file
+                    FileOutputStream fos = new FileOutputStream(thumbFile);
+                    fos.write(bitmapData);
+                    fos.flush();
+                    fos.close();
+                    final RequestBody requestThumbFile =
+                            RequestBody.create(
+                                    MediaType.parse("image/jpg"),
+                                    thumbFile);
+                    MultipartBody.Part thumbBody =
+                            MultipartBody.Part.createFormData("ThumbUrl", thumbFile.getName(), requestThumbFile);
 
-                ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
-                Call<RetroResult> call = apiService.sendContent("Bearer " + ((MyApplication) getApplication()).getCurrentToken().getToken()
-                        , ((MyApplication) getApplication()).getCurrentUser().getId()
-                        , ((StringWithTag) cateSpn.getSelectedItem()).tag, contentTxt.getText().toString()
-                        , body);
-                call.enqueue(new Callback<RetroResult>() {
-                    @Override
-                    public void onResponse(Call<RetroResult> call, Response<RetroResult> response) {
-                        waitingDialog.dismiss();
-                        if (response.isSuccessful()) {
-                            Log.d(TAG, "onResponse: respone:" + response.body().getResult());
-                            Toast.makeText(mContext, "مطلب شما با موفقیت ارسال گردید و پس از تایید منتشر خواهد شد.", Toast.LENGTH_LONG).show();
-                            PostContentActivity.super.onBackPressed();
-                        } else {
-                            Log.d(TAG, "onResponse: is not ok:" + response.message());
+
+                    // create RequestBody instance from file
+                    Log.d(TAG, "onClick: mediatype:" + MimeTypeMap.getFileExtensionFromUrl(resultUri.getPath()));
+                    final RequestBody requestFile =
+                            RequestBody.create(
+                                    MediaType.parse("image/jpg"),
+                                    imageFile);
+                    MultipartBody.Part imageBody =
+                            MultipartBody.Part.createFormData("PictureUrl", imageFile.getName(), requestFile);
+
+                    final ProgressDialog waitingDialog = new ProgressDialog(PostContentActivity.this);
+                    waitingDialog.setMessage("درحال ارسال مطلب\nلظفا چند لحظه منتظر بمانبد...");
+                    waitingDialog.show();
+
+                    ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
+                    Call<RetroResult> call = apiService.sendContent("Bearer " + ((MyApplication) getApplication()).getCurrentToken().getToken()
+                            , ((MyApplication) getApplication()).getCurrentUser().getId()
+                            , ((StringWithTag) cateSpn.getSelectedItem()).tag
+                            , RequestBody.create(MediaType.parse("text/plain"), titleET.getText().toString())
+
+                            , RequestBody.create(MediaType.parse("text/plain"), contentET.getText().toString())
+                            , imageBody
+                            , thumbBody
+                    );
+                    call.enqueue(new Callback<RetroResult>() {
+                        @Override
+                        public void onResponse(Call<RetroResult> call, Response<RetroResult> response) {
+                            waitingDialog.dismiss();
+                            if (response.isSuccessful()) {
+                                Log.d(TAG, "onResponse: respone:" + response.body().getResult());
+                                Toast.makeText(mContext, "مطلب شما با موفقیت ارسال گردید و پس از تایید منتشر خواهد شد.", Toast.LENGTH_LONG).show();
+                                PostContentActivity.super.onBackPressed();
+                            } else {
+                                Log.d(TAG, "onResponse: is not ok:" + response.message());
+                                Toast.makeText(mContext, "خظایی پیش آمده لطفا مجددا تلاش کنید", Toast.LENGTH_LONG).show();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<RetroResult> call, Throwable t) {
+                            waitingDialog.dismiss();
+                            Log.d(TAG, "onFailure: " + t.getMessage());
                             Toast.makeText(mContext, "خظایی پیش آمده لطفا مجددا تلاش کنید", Toast.LENGTH_LONG).show();
                         }
-                    }
-
-                    @Override
-                    public void onFailure(Call<RetroResult> call, Throwable t) {
-                        waitingDialog.dismiss();
-                        Log.d(TAG, "onFailure: " + t.getMessage());
-                        Toast.makeText(mContext, "خظایی پیش آمده لطفا مجددا تلاش کنید", Toast.LENGTH_LONG).show();
-                    }
-                });
-
+                    });
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
 
 
@@ -159,6 +201,7 @@ public class PostContentActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 resultUri = result.getUri();
                 Log.d("EDITPROFILEACTIVITY", "onActivityResult: " + resultUri);
+
                 image.setImageURI(resultUri);
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Exception error = result.getError();

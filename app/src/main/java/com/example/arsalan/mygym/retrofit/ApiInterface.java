@@ -74,7 +74,7 @@ PictureUrl
 ThumbUrl*/
     @Multipart
     @POST("/api/users/SendContent")
-    Call<RetroResult> sendContent(@Header("Authorization") String token,@Part("UserId") long userId ,@Part("NewsTypeId") int newsTypeId , @Part("Content") String content ,@Part MultipartBody.Part image);
+    Call<RetroResult> sendContent(@Header("Authorization") String token,@Part("UserId") long userId ,@Part("NewsTypeId") int newsTypeId ,@Part("Title") RequestBody title, @Part("Content") RequestBody content ,@Part MultipartBody.Part image,@Part MultipartBody.Part thumb);
 
     @Multipart
     @POST("/api/users/GetActivationCode")
